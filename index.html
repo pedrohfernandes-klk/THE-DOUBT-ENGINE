@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPARK TOOLS</title>
+<meta name="description" content="SPARK TOOLS — text tools for better questions, bad advice, crooked definitions, and useful doubt.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080605'/%3E%3Cpath d='M17 3 8 17h7l-2 12 11-17h-7z' fill='%23ffd24a' stroke='%23ff4d35' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7 7l3 3M25 7l-3 3M5 24l4-2M27 24l-4-2' stroke='%2372c89f' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050504;
+  --shell:#0c0a08;
+  --ink:#eee8d7;
+  --muted:#a89b82;
+  --dim:#665f51;
+  --line:#72c89f;
+  --gold:#ffd24a;
+  --red:#ff4d35;
+  --cream:#f0e6cf;
+  --grid:rgba(255,210,74,.024);
+
+  --said:#eef0f6;
+  --said2:#ff3a35;
+  --said3:#aebfd6;
+
+  --idk:#ff8a17;
+  --idk2:#f0e6cf;
+  --idk3:#bfa06a;
+
+  --false:#72c89f;
+  --false2:#c9ad6a;
+  --false3:#c86b72;
+
+  --badvice:#d94a3f;
+  --badvice2:#c59449;
+  --badvice3:#f1dec0;
+
+  --tilt:#3df09a;
+  --tilt2:#ffd24a;
+  --tilt3:#ff4d6d;
+
+  --evidence:#f0c86a;
+  --evidence2:#9cff9d;
+  --evidence3:#b8324a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{
+  font-family:'IBM Plex Mono','Courier New',monospace;
+  padding:8px;
+  background:
+    radial-gradient(620px 360px at 12% -8%,rgba(255,77,53,.075),transparent 68%),
+    radial-gradient(640px 390px at 86% -10%,rgba(255,138,23,.075),transparent 66%),
+    radial-gradient(760px 430px at 50% 0%,rgba(255,210,74,.055),transparent 70%),
+    radial-gradient(540px 340px at 90% 100%,rgba(61,240,154,.052),transparent 62%),
+    linear-gradient(180deg,#050504,#080706 52%,#040403);
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:10;
+  pointer-events:none;
+  opacity:.16;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 5px);
+  mix-blend-mode:screen;
+}
+.wrap{
+  width:min(1180px,100%);
+  margin:0 auto;
+  min-height:calc(100svh - 16px);
+  display:flex;
+  align-items:stretch;
+}
+.site{
+  width:100%;
+  position:relative;
+  border:1px solid rgba(255,210,74,.20);
+  border-radius:18px;
+  padding:8px;
+  background:
+    linear-gradient(145deg,rgba(24,18,9,.72),rgba(5,6,5,.97) 70%),
+    #060605;
+  box-shadow:0 0 0 3px #000,0 22px 64px rgba(0,0,0,.86),0 0 40px rgba(255,210,74,.05);
+}
+.surface{
+  position:relative;
+  overflow:hidden;
+  min-height:calc(100svh - 32px);
+  border:1px solid rgba(114,200,159,.16);
+  border-radius:14px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  background:
+    radial-gradient(120% 72% at 50% 0%,rgba(255,210,74,.04),transparent 58%),
+    repeating-linear-gradient(90deg,transparent 0 44px,var(--grid) 44px 45px),
+    repeating-linear-gradient(0deg,transparent 0 44px,var(--grid) 44px 45px),
+    linear-gradient(180deg,#0a0b08,#040504 84%);
+  box-shadow:inset 0 0 48px rgba(0,0,0,.70),inset 0 0 22px rgba(255,210,74,.025);
+}
+.surface:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:-46%;
+  height:44%;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(255,210,74,.018),transparent);
+  animation:scan 11s linear infinite;
+}
+.top{
+  position:relative;
+  z-index:3;
+  display:grid;
+  gap:12px;
+}
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+h1{
+  margin:0;
+  font-family:'Saira Stencil One','IBM Plex Mono',monospace;
+  font-weight:400;
+  line-height:.82;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-size:clamp(2.65rem,14.8vw,5.9rem);
+  text-shadow:0 0 10px rgba(255,210,74,.36),0 0 28px rgba(255,138,23,.18);
+}
+h1 span{
+  color:var(--line);
+  text-shadow:0 0 10px rgba(114,200,159,.30),0 0 26px rgba(114,200,159,.12);
+}
+.spark-icon{
+  flex:0 0 auto;
+  width:44px;
+  height:44px;
+  margin-top:2px;
+  opacity:.9;
+  filter:drop-shadow(0 0 10px rgba(255,210,74,.22));
+}
+.spark-icon svg{display:block;width:100%;height:100%;overflow:visible}
+.lede{
+  max-width:840px;
+  margin:0;
+  color:#d8cfb8;
+  line-height:1.52;
+  font-size:.94rem;
+}
+.action-row{
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  border:1px solid rgba(255,210,74,.18);
+  border-radius:12px;
+  padding:8px;
+  background:rgba(4,7,5,.72);
+}
+.readout{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  border:1px solid rgba(114,200,159,.20);
+  border-radius:8px;
+  padding:8px 10px;
+  color:var(--muted);
+  font-size:.66rem;
+  line-height:1.35;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:#050906;
+}
+button,.launch{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border-radius:8px;
+  border:1px solid rgba(255,210,74,.46);
+  background:linear-gradient(180deg,#ffe27a,#a96f17);
+  color:#100b05;
+  font-family:inherit;
+  font-weight:700;
+  font-size:.74rem;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(0,0,0,.70),inset 0 1px 0 rgba(255,255,255,.26);
+}
+button:hover,.launch:hover{filter:brightness(1.06)}
+button:active,.launch:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.18)}
+.ghost{
+  background:#090d09;
+  color:var(--gold);
+  border-color:rgba(255,210,74,.30);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018);
+}
+.stats{
+  position:relative;
+  z-index:3;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.stats span{
+  border:1px solid rgba(255,210,74,.16);
+  border-radius:999px;
+  padding:5px 8px;
+  background:rgba(3,8,5,.60);
+  color:var(--muted);
+  font-size:.58rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.stats b{font-weight:500;color:var(--gold)}
+.tools{
+  position:relative;
+  z-index:3;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.tool{
+  --accent:var(--gold);
+  --accent2:var(--line);
+  --accent3:var(--red);
+  position:relative;
+  display:grid;
+  grid-template-columns:8px 1fr;
+  min-height:178px;
+  border:1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius:14px;
+  overflow:hidden;
+  background:
+    radial-gradient(190px 120px at 100% 0,color-mix(in srgb, var(--accent) 10%, transparent),transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.016),rgba(0,0,0,.25)),
+    #080b08;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.016),inset 0 0 28px rgba(0,0,0,.34);
+}
+.tool:before{
+  content:"";
+  background:linear-gradient(180deg,var(--accent),var(--accent2),var(--accent3));
+  box-shadow:0 0 18px color-mix(in srgb, var(--accent) 38%, transparent);
+}
+.tool-inner{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  padding:13px 13px 12px;
+}
+.tool[data-id="said-it"]{--accent:var(--said);--accent2:var(--said2);--accent3:var(--said3)}
+.tool[data-id="idk-machine"]{--accent:var(--idk);--accent2:var(--idk2);--accent3:var(--idk3)}
+.tool[data-id="false-positive"]{--accent:var(--false);--accent2:var(--false2);--accent3:var(--false3)}
+.tool[data-id="badvice"]{--accent:var(--badvice);--accent2:var(--badvice2);--accent3:var(--badvice3)}
+.tool[data-id="tilt"]{--accent:var(--tilt);--accent2:var(--tilt2);--accent3:var(--tilt3)}
+.tool[data-id="bad-evidence"]{--accent:var(--evidence);--accent2:var(--evidence2);--accent3:var(--evidence3)}
+.tool.provisional{border-style:dashed}
+.unit{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--dim);
+  font-size:.60rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.lamp{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-top:2px;
+  background:var(--accent);
+  box-shadow:0 0 10px color-mix(in srgb, var(--accent) 72%, transparent);
+}
+.tool h2{
+  margin:0;
+  color:var(--accent);
+  font-family:'Saira Stencil One','IBM Plex Mono',monospace;
+  font-weight:400;
+  font-size:clamp(1.9rem,8vw,2.28rem);
+  line-height:.90;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  text-shadow:0 0 10px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.kind{
+  margin:0;
+  color:var(--accent2);
+  font-size:.70rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.desc{
+  margin:0;
+  color:#d0c9b7;
+  font-size:.88rem;
+  line-height:1.48;
+}
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:auto;
+}
+.tags span{
+  border:1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius:999px;
+  padding:4px 7px;
+  color:var(--muted);
+  font-size:.56rem;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.tool .launch{
+  width:100%;
+  margin-top:2px;
+  min-height:40px;
+  border-color:color-mix(in srgb, var(--accent2) 55%, transparent);
+  background:linear-gradient(180deg,color-mix(in srgb, var(--accent2) 88%, #fff 12%),color-mix(in srgb, var(--accent2) 58%, #000 25%));
+}
+.provisional-note{
+  color:color-mix(in srgb, var(--accent2) 76%, #fff 0%);
+  font-size:.62rem;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.viewer{
+  position:relative;
+  z-index:3;
+  display:none;
+  min-height:calc(100svh - 40px);
+  border:1px solid rgba(255,210,74,.22);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.46));
+  overflow:hidden;
+}
+.viewer.on{display:flex;flex-direction:column}
+.viewer-bar{
+  min-height:48px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:8px;
+  padding:8px;
+  border-bottom:1px solid rgba(255,210,74,.18);
+  background:rgba(5,7,5,.90);
+}
+.viewer-title{
+  color:var(--gold);
+  font-size:.66rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.viewer-frame{
+  width:100%;
+  min-height:calc(100svh - 112px);
+  flex:1;
+  border:0;
+  background:#020807;
+}
+.about{
+  position:relative;
+  z-index:3;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.about-card{
+  border:1px solid rgba(255,210,74,.18);
+  border-radius:14px;
+  padding:13px;
+  background:linear-gradient(180deg,rgba(255,210,74,.026),rgba(0,0,0,.20));
+  color:#cbc3b0;
+  line-height:1.55;
+  font-size:.86rem;
+}
+.about-card h3{
+  margin:0 0 7px;
+  color:var(--gold);
+  font-size:.70rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.about-card p{margin:0 0 9px}
+.about-card p:last-child{margin-bottom:0}
+.footer{
+  position:relative;
+  z-index:3;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  padding-top:10px;
+  border-top:1px dashed rgba(255,210,74,.14);
+  color:var(--dim);
+  font-size:.60rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.hidden{display:none!important}
+@keyframes scan{to{top:145%}}
+@media(min-width:760px){
+  body{padding:10px}
+  .surface{padding:clamp(18px,3vw,28px);gap:16px}
+  .top{
+    grid-template-columns:1fr 352px;
+    align-items:end;
+    gap:18px;
+    padding-bottom:14px;
+    border-bottom:1px solid rgba(255,210,74,.16);
+  }
+  .title-row{display:block}
+  .spark-icon{position:absolute;right:0;top:0;width:56px;height:56px}
+  .lede{font-size:1.02rem}
+  .action-row{grid-template-columns:1fr auto auto;align-self:end}
+  .tools{grid-template-columns:repeat(3,1fr);gap:12px}
+  .tool{display:flex;min-height:250px}
+  .tool:before{position:absolute;left:0;right:0;top:0;height:7px}
+  .tool-inner{padding:15px;gap:12px;width:100%}
+  .tool h2{font-size:clamp(1.75rem,3vw,2.22rem)}
+  .about{grid-template-columns:1.35fr .65fr;gap:12px}
+  .about-card{font-size:.92rem;padding:16px}
+  .footer{font-size:.68rem}
+}
+@media(min-width:1040px){
+  .tools{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:430px){
+  .viewer-bar{
+    grid-template-columns:1fr 1fr;
+  }
+  .viewer-title{
+    grid-column:1 / -1;
+    grid-row:1;
+    text-align:left;
+    padding-left:3px;
+  }
+  #backBtn{grid-row:2}
+  #openDirect{grid-row:2}
+  .viewer-frame{min-height:calc(100svh - 148px)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .surface:after{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="site">
+    <section class="surface" aria-label="Spark Tools">
+      <header class="top" id="top">
+        <div>
+          <div class="title-row">
+            <h1>SPARK <span>TOOLS</span></h1>
+            <div class="spark-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44">
+                <path d="M23 3 11 23h9l-3 18 16-25h-10z" fill="var(--gold)" stroke="var(--red)" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M7 9l5 5M37 9l-5 5M6 33l6-3M38 33l-6-3" stroke="var(--line)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <p class="lede">Text tools for better questions, bad advice, crooked definitions, and useful doubt.</p>
+        </div>
+
+        <div class="action-row" aria-label="Tool controls">
+          <div class="readout" id="readout">SELECT A TOOL</div>
+          <button id="randomBtn" type="button">Spark one</button>
+          <button class="ghost" id="aboutBtn" type="button">About</button>
+        </div>
+      </header>
+
+      <div class="stats" aria-label="Tool status" id="stats">
+        <span>Tools: <b>06</b></span>
+        <span>Finished: <b>05</b></span>
+        <span>Provisional: <b>01</b></span>
+        <span>Runs: <b>in browser</b></span>
+      </div>
+
+      <section class="tools" id="tools" aria-label="Available tools">
+        <article class="tool" data-id="said-it" data-name="SAID IT" data-href="said-it/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 01</span><span class="lamp"></span></div>
+            <h2>SAID IT</h2>
+            <p class="kind">quiet-part extractor</p>
+            <p class="desc">For finding the sentence the room already knew and nobody wanted to say first.</p>
+            <div class="tags"><span>truth</span><span>social scripts</span><span>pressure</span></div>
+            <a class="launch" href="said-it/index.html">Use tool</a>
+          </div>
+        </article>
+
+        <article class="tool" data-id="idk-machine" data-name="IDK MACHINE" data-href="idk-machine/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 02</span><span class="lamp"></span></div>
+            <h2>IDK MACHINE</h2>
+            <p class="kind">prompt disturbance unit</p>
+            <p class="desc">For turning a blank page into a task, a question, a scene, or a useful wrong turn.</p>
+            <div class="tags"><span>prompts</span><span>making</span><span>questions</span></div>
+            <a class="launch" href="idk-machine/index.html">Use tool</a>
+          </div>
+        </article>
+
+        <article class="tool" data-id="false-positive" data-name="FALSE POSITIVE" data-href="false-positive/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 03</span><span class="lamp"></span></div>
+            <h2>FALSE POSITIVE</h2>
+            <p class="kind">alarm checker</p>
+            <p class="desc">For testing whether certainty is evidence or only an alarm with excellent timing.</p>
+            <div class="tags"><span>doubt</span><span>signal</span><span>alarm</span></div>
+            <a class="launch" href="false-positive/index.html">Use tool</a>
+          </div>
+        </article>
+
+        <article class="tool" data-id="badvice" data-name="BADVICE" data-href="badvice/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 04</span><span class="lamp"></span></div>
+            <h2>BADVICE</h2>
+            <p class="kind">anti-advice engine</p>
+            <p class="desc">For polished bad ideas, found wisdom, and confidence that should have stayed quiet.</p>
+            <div class="tags"><span>bad advice</span><span>satire</span><span>failure</span></div>
+            <a class="launch" href="badvice/index.html">Use tool</a>
+          </div>
+        </article>
+
+        <article class="tool provisional" data-id="tilt" data-name="TILT" data-href="tilt/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 05</span><span class="lamp"></span></div>
+            <h2>TILT</h2>
+            <p class="kind">crooked dictionary</p>
+            <p class="desc">For naming familiar things from the wrong angle until the obvious meaning starts to wobble.</p>
+            <div class="tags"><span>definitions</span><span>angle</span><span>words</span></div>
+            <span class="provisional-note">Provisional build</span>
+            <a class="launch" href="tilt/index.html">Use provisional</a>
+          </div>
+        </article>
+
+        <article class="tool" data-id="bad-evidence" data-name="BAD EVIDENCE" data-href="bad-evidence/index.html">
+          <div class="tool-inner">
+            <div class="unit"><span>tool 06</span><span class="lamp"></span></div>
+            <h2>BAD EVIDENCE</h2>
+            <p class="kind">proof contamination test</p>
+            <p class="desc">For weak claims, fake certainty, suspicious logic, and proof wearing a costume.</p>
+            <div class="tags"><span>evidence</span><span>claims</span><span>logic</span></div>
+            <a class="launch" href="bad-evidence/index.html">Use tool</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="viewer" id="viewer" aria-label="Tool viewer">
+        <div class="viewer-bar">
+          <button class="ghost" id="backBtn" type="button">← Tools</button>
+          <div class="viewer-title" id="viewerTitle">Tool open</div>
+          <a class="launch" id="openDirect" href="#" target="_blank" rel="noopener">Open alone</a>
+        </div>
+        <iframe class="viewer-frame" id="toolFrame" title="Selected Spark Tools app" loading="lazy"></iframe>
+      </section>
+
+      <section class="about" id="about">
+        <div class="about-card">
+          <h3>What these tools do</h3>
+          <p>SPARK TOOLS is a small set of browser-based text tools. Each one gives you a line, prompt, warning, definition, or useful misdirection to test against whatever you are making or thinking through.</p>
+          <p>The point is not to be right on the first press. The point is to change the angle quickly.</p>
+        </div>
+        <div class="about-card">
+          <h3>How it works</h3>
+          <p>Pick a tool, use it, then return to the list. Only one tool is visible at a time.</p>
+          <p>Nothing is saved to a server. Each tool remains a separate self-contained HTML file and can be replaced independently.</p>
+        </div>
+      </section>
+
+      <footer class="footer" id="footer">
+        <span>© HRF 2026. All rights reserved.</span>
+        <span>Small tools for changing the angle.</span>
+      </footer>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const tools = Array.from(document.querySelectorAll('.tool'));
+const readout = document.getElementById('readout');
+const randomBtn = document.getElementById('randomBtn');
+const aboutBtn = document.getElementById('aboutBtn');
+const about = document.getElementById('about');
+const viewer = document.getElementById('viewer');
+const toolsGrid = document.getElementById('tools');
+const stats = document.getElementById('stats');
+const footer = document.getElementById('footer');
+const frame = document.getElementById('toolFrame');
+const viewerTitle = document.getElementById('viewerTitle');
+const backBtn = document.getElementById('backBtn');
+const openDirect = document.getElementById('openDirect');
+
+function say(text){ readout.textContent = text; }
+
+function showTools(){
+  viewer.classList.remove('on');
+  toolsGrid.classList.remove('hidden');
+  stats.classList.remove('hidden');
+  about.classList.remove('hidden');
+  footer.classList.remove('hidden');
+  frame.removeAttribute('src');
+  say('SELECT A TOOL');
+  history.replaceState(null,'',location.pathname);
+}
+
+function openTool(tool){
+  const name = tool.dataset.name;
+  const href = tool.dataset.href;
+  viewerTitle.textContent = 'USING · ' + name;
+  openDirect.href = href;
+  frame.src = href;
+  toolsGrid.classList.add('hidden');
+  stats.classList.add('hidden');
+  about.classList.add('hidden');
+  footer.classList.add('hidden');
+  viewer.classList.add('on');
+  say('USING · ' + name);
+  history.replaceState(null,'','#' + tool.dataset.id);
+  document.getElementById('top').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+tools.forEach((tool)=>{
+  const name = tool.dataset.name;
+  tool.addEventListener('mouseenter',()=>say('SELECTED · '+name));
+  tool.addEventListener('focusin',()=>say('SELECTED · '+name));
+  tool.querySelector('.launch').addEventListener('click',(e)=>{
+    e.preventDefault();
+    openTool(tool);
+  });
+});
+
+randomBtn.addEventListener('click',()=>{
+  if(!tools.length) return;
+  const tool = tools[Math.floor(Math.random()*tools.length)];
+  const name = tool.dataset.name;
+  say('SPARKED · '+name);
+  tool.animate([
+    {transform:'translateY(0)'},
+    {transform:'translateY(-5px)'},
+    {transform:'translateY(0)'}
+  ],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});
+  window.setTimeout(()=>openTool(tool),360);
+});
+
+aboutBtn.addEventListener('click',()=>{
+  about.scrollIntoView({behavior:'smooth',block:'nearest'});
+  say('ABOUT · SMALL TOOLS FOR CHANGING THE ANGLE');
+});
+
+backBtn.addEventListener('click',showTools);
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape' && viewer.classList.contains('on')){ showTools(); return; }
+  if(e.key.toLowerCase()==='r' && !viewer.classList.contains('on')){ randomBtn.click(); }
+});
+
+const initial = location.hash.replace('#','');
+if(initial){
+  const target = tools.find(t=>t.dataset.id===initial);
+  if(target) window.setTimeout(()=>openTool(target),120);
+}
+})();
+</script>
+</body>
+</html>
